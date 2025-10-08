@@ -88,7 +88,7 @@ Construction of the bookkeeping array takes `O(n)` time. After this, the sorted 
 Counting sort is a very efficient algorithm but it can only be used when the constant c is small enough, so that the array elements can be used as indices in the bookkeeping array
 
 
-## Sorting in C++
+## SORTING IN C++
 For example, the C++ standard library contains the function `sort` that can be easily used for sorting arrays and other data structures.
 
 ### Comparison operators
@@ -113,3 +113,159 @@ v.push_back({2,1,3});
 sort(v.begin(), v.end());
 ```
 After this, the order of the tuples is `(1, 5, 3)`, `(2, 1, 3)` and `(2, 1, 4)`.
+
+### User-defined structs
+
+User-defined structs do not have a comparison operator automatically. The operator should be defined as a function `operator<` inside the struct, whose parameter is another element of the same type. The operator should return `true` if the element is smaller than the parameter, and `false` otherwise.
+
+For example, the following `struct P` contains the `x` and `y` coordinates of a point. The comparison operator is defined so that the points are sorted primarily by the `x` coordinate and secondarily by the `y` coordinate.
+```
+struct P {
+int x, y;
+bool operator<(const P &p) {
+  if (x != p.x) return x < p.x;
+  else return y < p.y;
+}
+};
+```
+
+### Comparison functions
+It is possible to give an external __comparison function__ to the sort function as a callback function.
+
+For example, the following comparison function `comp` sorts strings primarily by length and secondarily by alphabetical order:
+```
+bool comp(string a, string b) {
+  if (a.size() != b.size()) return a.size() < b.size();
+  return a < b;
+}
+```
+
+Now a vector of strings can be sorted as follows:
+```
+sort(v.begin(), v.end(), comp);
+```
+
+
+## BINARY SEARCH
+
+A general method for searching for an element in an array is to use a `for` loop that iterates through the elements of the array.
+
+For example, the following code searches for an element x in an array:
+```
+for (int i = 0; i < n; i++) {
+  if (array[i] == x) {
+    // x found at index i
+  }
+}
+```
+
+The time complexity of this approach is `O(n)`, because in the worst case, it is necessary to check all elements of the array. 
+
+However, if the array is sorted, the situation is different. In this case it is possible to perform the search much faster, because the order of the elements in the array guides the search. The following __binary search__ algorithm efficiently searches for an element in a sorted array in `O(log n)` time.
+
+### Method 1
+Method 1
+The usual way to implement binary search resembles looking for a word in a dictionary. The search maintains an active region in the array, which initially contains all array elements. Then, a number of steps is performed, each of which halves the size of the region.
+
+At each step, the search checks the middle element of the active region. If the middle element is the target element, the search terminates. Otherwise, the search recursively continues to the left or right half of the region, depending on the value of the middle element.
+
+```
+int a = 0, b = n-1;
+while (a <= b) {
+  int k = (a+b)/2;
+  if (array[k] == x) {
+    // x found at index k
+  }
+  if (array[k] > x) b = k-1;
+  else a = k+1;
+}
+```
+
+In this implementation, the active region is `a...b`, and initially the region is
+`0...n − 1`. The algorithm halves the size of the region at each step, so the time
+complexity is `O(log n)`.
+
+### Method 2
+
+Alternative method to implement binary search is based on an efficient way to iterate through elements of the array. The idea is to make jumps and slow the speed when we get closer to the target element.
+
+The search goes through the array from left to right, and the initial jump length is `n/2`. At each step, the jump length will be halved: first `n/4`, then `n/8`,
+`n/16`, etc., until finally the length is 1. After the jumps, either the target element
+has been found or we know that it does not appear in the array.
+
+```
+int k = 0;
+for (int b = n/2; b >= 1; b /= 2) {
+  while (k+b < n && array[k+b] <= x) k += b;
+}
+if (array[k] == x) {
+  // x found at index k
+}
+```
+
+During the search, the variable `b` contains the current jump length. The time complexity of the algorithm is `O(log n)`, because the code in the `while` loop is performed at most twice for each jump length.
+
+
+## C++ FUNCTIONS
+The C++ standard library contains the following functions that are based on
+binary search and work in logarithmic time:
+- `lower_bound` returns a pointer to the first array element whose value is at least `x`.
+- `upper_bound` returns a pointer to the first array element whose value is larger than `x`.
+- `equal_range` returns both above pointers.
+
+The functions assume that the array is sorted. If there is no such element, the pointer points to the element after the last array element. For example, the following code finds out whether an array contains an element with value x:
+```
+auto k = lower_bound(array,array+n,x)-array;
+if (k < n && array[k] == x) {
+  // x found at index k
+}
+```
+Then, the following code counts the number of elements whose value is x:
+```
+auto a = lower_bound(array, array+n, x);
+auto b = upper_bound(array, array+n, x);
+cout << b-a << "\n";
+```
+Using equal_range, the code becomes shorter:
+```
+auto r = equal_range(array, array+n, x);
+cout << r.second-r.first << "\n";
+```
+
+### Finding the smallest solution
+An important use for binary search is to find the position where the value of a `function` changes. Suppose that we wish to find the smallest value `k` that is a valid solution for a problem. We are given a function `ok(x)` that returns `true` if `x` is a valid solution and `false` otherwise. In addition, we know that `ok(x)` is `false` when `x < k` and `true` when `x <= k`
+```
+int x = -1;
+for (int b = z; b >= 1; b /= 2) {
+  while (!ok(x+b)) x += b;
+}
+int k = x+1;
+```
+
+The search finds the largest value of `x` for which `ok(x)` is `false`. Thus, the next
+value `k = x + 1` is the smallest possible value for which `ok(k)` is `true`. The initial jump length `z` has to be large enough, for example some value for which we know beforehand that `ok(z)` is true.
+
+The algorithm calls the function ok `O(log z)` times, so the total time complexity
+depends on the function `ok`. For example, if the function works in `O(n)` time, the
+total time complexity is `O(n log z)`.
+
+### Finding the maximum value
+Binary search can also be used to find the maximum value for a function that is first increasing and then decreasing.
+
+Our task is to find a position `k` such that 
+- `f (x) < f (x + 1) when x < k`, and
+- `f (x) > f (x + 1) when x ≥ k`
+
+The idea is to use binary search for finding the largest value of `x` for which
+`f (x) < f (x+1)`. This implies that `k = x+1` because `f (x+1) > f (x+2)`. The following code implements the search:
+```
+int x = -1;
+for (int b = z; b >= 1; b /= 2) {
+  while (f(x+b) < f(x+b+1)) x += b;
+}
+int k = x+1;
+```
+
+> Note that unlike in the ordinary binary search, here it is not allowed that
+consecutive values of the function are equal. In this case it would not be possible
+to know how to continue the search.
