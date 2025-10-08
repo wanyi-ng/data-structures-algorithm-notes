@@ -119,9 +119,9 @@ void g(int n) {
 
 `O(n^2)` A __quadratic__ algorithm often contains two nested loops. It is possible to go through all pairs of the input elements in `O(n2)` time.
 
-`O(n3)` A __cubic__ algorithm often contains three nested loops. It is possible to go through all triplets of the input elements in `O(n^3)` time.
+`O(n^3)` A __cubic__ algorithm often contains three nested loops. It is possible to go through all triplets of the input elements in `O(n^3)` time.
 
-`O(2n)` This time complexity often indicates that the algorithm iterates through all subsets of the input elements. For example, the subsets of {1, 2, 3} are ;, {1}, {2}, {3}, {1, 2}, {1, 3}, {2, 3} and {1, 2, 3}.
+`O(2^n)` This time complexity often indicates that the algorithm iterates through all subsets of the input elements. For example, the subsets of {1, 2, 3} are ;, {1}, {2}, {3}, {1, 2}, {1, 3}, {2, 3} and {1, 2, 3}.
 
 `O(n!)` This time complexity often indicates that the algorithm iterates through all permutations of the input elements. For example, the permutations of {1, 2, 3} are (1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2) and (3, 2, 1).
 
