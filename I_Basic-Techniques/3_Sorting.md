@@ -87,6 +87,29 @@ For example, the value at position 3 in the bookkeeping array is 2, because the 
 Construction of the bookkeeping array takes `O(n)` time. After this, the sorted array can be created in `O(n)` time because the number of occurrences of each element can be retrieved from the bookkeeping array. Thus, the total time complexity of counting sort is `O(n)`.
 Counting sort is a very efficient algorithm but it can only be used when the constant c is small enough, so that the array elements can be used as indices in the bookkeeping array
 
+
 ## Sorting in C++
 For example, the C++ standard library contains the function `sort` that can be easily used for sorting arrays and other data structures.
 
+### Comparison operators
+__Comparison operator__ is defined for the data type of the elements to be sorted. When sorting, this operator will be used whenever it is necessary to find out the order of the two elements.
+
+Most C++ data types have a built-in comparison operator, and elements of those types can be sorted automatically. For example, numbers are sorted according to their values and strings are sorted in alphabetical order. 
+
+Pairs (`pair`) are sorted primarily according to their first elements (`first`). However, if the first elements of two pairs are equal, they are sorted according to their second elements (second):
+```
+vector<pair<int,int>> v;
+v.push_back({1,5});
+v.push_back({2,3});
+v.push_back({1,2});
+sort(v.begin(), v.end());
+```
+After this, the order of the pairs is `(1, 2)`, `(1, 5)` and `(2, 3)`. In a similar way, tuples (`tuple`) are sorted primarily by the first element, secondarily by the second element, etc.2:
+```
+vector<tuple<int,int,int>> v;
+v.push_back({2,1,4});
+v.push_back({1,5,3});
+v.push_back({2,1,3});
+sort(v.begin(), v.end());
+```
+After this, the order of the tuples is `(1, 5, 3)`, `(2, 1, 3)` and `(2, 1, 4)`.
