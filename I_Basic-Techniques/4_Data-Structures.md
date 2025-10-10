@@ -2,7 +2,9 @@
 
 A __data structure__ is a way to store data in the memory of a computer. It is important to choose an appropriate data structure for a problem, because each data structure has its own advantages and disadvantages.
 
-### Dynamic arrays
+
+## Dynamic arrays
+
 __Dynamic array__ is an array whose size can be changed during execution of the program. The most popular dynamic array in C++ is the `vector` structure, which can be used almost like an ordinary array.
 
 The following code creates an empty vector and adds three elements to it:
@@ -269,7 +271,6 @@ The code assumes that the set is not empty, and goes through all possible cases 
 ## OTHER STRUCTURES
 
 ### Bitset
-
 __Bitset__ is an array whose each value is either 0 or 1. For example, the following code creates a bitset that contains 10 elements:
 ```
 bitset<10> s;
